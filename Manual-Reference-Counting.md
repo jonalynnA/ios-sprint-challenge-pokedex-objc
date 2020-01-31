@@ -24,25 +24,28 @@ Answer the following questions inline with this document.
 	}
 
 	printf("Word frequency: %s", wordFrequency.description.UTF8String);
+// RIGHT HERE NEEDS TO HAVE THIS CODE
+   
 	```
 
 	2. Rewrite the code so that it does not leak any memory with ARC disabled
-
+ [punctuationSet release] //put this on line 28
+ 
 2. Which of these objects is autoreleased?  Why?
 
-	1. `NSDate *yesterday = [NSDate date];`
+	1. `NSDate *yesterday = [NSDate date];` Autoreleased with ***[NSDate  date]
 	
 	2. `NSDate *theFuture = [[NSDate dateWithTimeIntervalSinceNow:60] retain];`
 	
 	3. `NSString *name = [[NSString alloc] initWithString:@"John Sundell"];`
 	
-	4. `NSDate *food = [NSDate new];`
+	4. `NSDate *food = [NSDate new];` Autoreleased with ***[NSDate new]
 	
 	5. `LSIPerson *john = [[LSIPerson alloc] initWithName:name];`
 	
-	6. `LSIPerson *max = [[[LSIPerson alloc] initWithName:@"Max"] autorelease];`
+	6. `LSIPerson *max = [[[LSIPerson alloc] initWithName:@"Max"] autorelease];` Autoreleased with explicit wording to Autorelease
 
-3. Explain when you need to use the `NSAutoreleasePool`.
+3. Explain when you need to use the `NSAutoreleasePool`. I think this is most useful when there are large amounts of data to loop through
 
 
 4. Implement a convenience `class` method to create a `LSIPerson` object that takes a `name` property and returns an autoreleased object.
@@ -53,6 +56,19 @@ Answer the following questions inline with this document.
 @property (nonatomic, copy) NSString *name;
 
 - (instancetype)initWithName:(NSString *)name;
+
+@end
+
+@interface LSIPerson: NSObject
+
+@property (nonatomic, copy) NSString *name;
+
+- (instancetype)initWithName;
++ (LSIPerson)PersonWithNameOf(NSString *)name;
+
++ (LSIPerson)PersonWithNameOf(NSString *)name {
+    return [[[LSIPerson alloc] initWithName:name] autorelease];
+}
 
 @end
 ```
